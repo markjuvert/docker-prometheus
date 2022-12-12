@@ -1,0 +1,39 @@
+global:
+  resolve_timeout: 5m
+
+route:
+  group_by: ['alertname']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 1m
+  # receiver: 'web.hook'
+  receiver: 'slack'
+  routes:
+  - match:
+      severity: page
+    group_by: ['team']
+    receiver: 'slack'
+    routes:
+    - match:
+        team: devops
+      receiver: 'slack'
+
+receivers:
+#- name: 'web.hook'
+# webhook_configs:
+#   - url: 'http://127.0.0.1:5001/'
+- name: 'slack'
+  slack_configs:
+  - channel: #prometheus
+    api_url: https://hooks.slack.com/services/T03CJ6WGALW/-----B04EFC42RA6/ejb1LFhDvl6zxx5SpFP3iN1w
+    text: "Overview: {{ .CommonAnnotations.overview }}"
+
+inhibit_rules:
+- source_match:
+    severity: 'page'
+    # severity: 'critical'
+  target_match:
+    # severity: 'warning'
+    severity: 'ticket'
+  # equal: ['alertname', 'dev', 'instance']
+  equal: ['team']

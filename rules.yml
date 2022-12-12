@@ -1,0 +1,13 @@
+groups:
+- name: uptime
+  rules:
+  - record: job:uptime:average:tdl
+    expr: avg without (instance) (up{job="devops-monitoring"})
+  - alert: ToDoListApplicationDown
+    expr: job:uptime:average:tdl < .75
+    for: 2m
+    annotations:
+      overview: '{{printf "%.2f" $value}}% instances are up for {{ $labels.job }}'
+    labels:
+      severity: page
+      team: devops
