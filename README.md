@@ -414,3 +414,4 @@ For example
 ```
 irate(node_cpu_seconds_total[30s]) * 100
 ```
+** Continuation of the project can be found at http://www.prom-graf.cloud2day.link/
